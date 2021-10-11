@@ -1,0 +1,34 @@
+version: '3.7'
+
+networks:
+  mvst-wordpress:
+
+
+services:
+  wordpress:
+    image: wordpress:5.4.1
+    container_name: mvst-wordpress
+    restart: always
+    volumes:
+      - ./src/wordpress:/var/www/html
+    ports:
+      - 8002:80
+    environment:
+      WORDPRESS_DB_HOST: mvst-wordpress_db
+    env_file:
+      - ./env/wordpress.env
+    depends_on:
+      - db
+    networks:
+      - mvst-wordpress
+
+  db:
+    image: mysql:5.6
+    container_name: mvst-wordpress_db
+    restart: always
+    volumes:
+      - ./data:/var/lib/mysql
+    env_file:
+      - ./env/db.env
+    networks:
+      - mvst-wordpress
